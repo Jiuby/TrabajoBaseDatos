@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %} | Búsqueda resultados {% endblock %}
+
+{% block content %}
+<section id="showcase-inner" class="showcase-search text-white py-5">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-12">
+        <form action="{% url 'search' %}">
+          <!-- Fila 1 -->
+          <div class="form-row">
+
+            <div class="col-md-4 mb-3">
+              <label class="sr-only">Ciudad</label>
+              <input type="text" name="city" class="form-control" placeholder="Ciudad" value="{{ values.city }}">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="sr-only">Departamento</label>
+              <select name="state" class="form-control">
+                <option value="">-- Seleccione un departamento --</option>
+                {% for key, value in state_choices.items %}
+                  <option value="{{ key }}"
+                    {% if key == values.state %}
+                      selected
+                    {% endif %}
+                  >{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <!-- Fila 2 -->
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label class="sr-only">Habitaciones</label>
+              <select name="bedrooms" class="form-control">
+                <option value="">Habitaciones</option>
+                {% for key, value in bedroom_choices.items %}
+                  <option value="{{ key }}"
+                    {% if key == values.bedrooms %}
+                      selected
+                    {% endif %}
+                  >{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <select name="price" class="form-control">
+                <option value="">Precio máximo</option>
+                {% for key, value in price_choices.items %}
+                  <option value="{{ key }}"
+                    {% if key == values.price %}
+                      selected
+                    {% endif %}
+                  >{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-block mt-4" type="submit">Buscar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Breadcrumb -->
+<section id="bc" class="mt-3">
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'index' %}"><i class="fas fa-home"></i> Inicio</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'listings' %}">Averigua propiedades</a>
+        </li>
+        <li class="breadcrumb-item active">Resultados de búsqueda</li>
+      </ol>
+    </nav>
+  </div>
+</section>
+
+<!-- Resultados -->
+<section id="listings" class="py-4">
+  <div class="container">
+    <div class="row">
+      {% if listings %}
+        {% for listing in listings %}
+          <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card listing-preview">
+              <img class="card-img-top" src="{{ listing.foto_principal.url }}" alt="" />
+              <div class="card-img-overlay">
+                <h2>
+                  <span class="badge badge-secondary text-white">${{ listing.precio | intcomma }}</span>
+                </h2>
+              </div>
+              <div class="card-body">
+                <div class="listing-heading text-center">
+                  <h4 class="text-primary">{{ listing.titulo }}</h4>
+                  <p>
+                    <i class="fas fa-map-marker text-secondary"></i>
+                    {{ listing.ciudad }} {{ listing.departamento }}, {{ listing.codigoPostal }}
+                  </p>
+                </div>
+                <hr />
+                <div class="row py-2 text-secondary">
+                  <div class="col-6">
+                    <i class="fas fa-th-large"></i> Metros: {{ listing.tamaño }}
+                  </div>
+                  <div class="col-6">
+                    <i class="fas fa-car"></i> Garage: {{ listing.garage }}
+                  </div>
+                </div>
+                <div class="row py-2 text-secondary">
+                  <div class="col-6">
+                    <i class="fas fa-bed"></i> Habitaciones: {{ listing.habitaciones }}
+                  </div>
+                  <div class="col-6">
+                    <i class="fas fa-bath"></i> Baños: {{ listing.baños }}
+                  </div>
+                </div>
+                <hr />
+                <div class="row py-2 text-secondary">
+                  <div class="col-6">
+                    <i class="fas fa-user"></i> {{ listing.dueño }}
+                  </div>
+                </div>
+                <div class="row text-secondary pb-2">
+                  <div class="col-6">
+                    <i class="fas fa-clock"></i> {{ listing.lista_dato | timesince }}
+                  </div>
+                </div>
+                <hr />
+                <a href="{% url 'listing' listing.id %}" class="btn btn-primary btn-block">
+                  Más información
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-md-12">
+          <p>No hay resultados disponibles.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

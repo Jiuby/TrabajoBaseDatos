@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h3>¿Estás seguro de que deseas eliminar esta propiedad?</h3>
+  <p><strong>{{ propiedad.titulo }}</strong> - ${{ propiedad.precio }}</p>
+  <form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+    <a href="{% url 'dashboard_dueno' %}" class="btn btn-secondary ml-2">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

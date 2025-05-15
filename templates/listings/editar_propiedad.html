@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Editar Propiedad</h2>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label>Título</label>
+      <input type="text" name="titulo" class="form-control" value="{{ propiedad.titulo }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Dirección</label>
+      <input type="text" name="direccion" class="form-control" value="{{ propiedad.direccion }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Ciudad</label>
+      <input type="text" name="ciudad" class="form-control" value="{{ propiedad.ciudad }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Departamento</label>
+      <select name="departamento" class="form-control" required>
+        {% for code, name in departamentos %}
+          <option value="{{ code }}" {% if propiedad.departamento == code %}selected{% endif %}>{{ name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Código Postal</label>
+      <input type="text" name="codigoPostal" class="form-control" value="{{ propiedad.codigoPostal }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Descripción</label>
+      <textarea name="descripcion" class="form-control">{{ propiedad.descripcion }}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Precio</label>
+      <input type="number" name="precio" class="form-control" value="{{ propiedad.precio }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Habitaciones</label>
+      <input type="number" name="habitaciones" class="form-control" value="{{ propiedad.habitaciones }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Baños</label>
+      <input type="number" step="0.5" name="baños" class="form-control" value="{{ propiedad.baños }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Garage</label>
+      <input type="number" name="garage" class="form-control" value="{{ propiedad.garage }}">
+    </div>
+
+    <div class="form-group">
+      <label>Tamaño</label>
+      <input type="number" name="tamaño" class="form-control" value="{{ propiedad.tamaño }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Tamaño Lote</label>
+      <input type="number" step="0.1" name="tamaño_lote" class="form-control" value="{{ propiedad.tamaño_lote }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Foto principal (actual se mantiene si no subes nueva)</label>
+      <input type="file" name="foto_principal" class="form-control">
+    </div>
+
+    {% for i in "123456" %}
+    <div class="form-group">
+      <label>Foto opcional {{ i }} (se mantiene si no subes nueva)</label>
+      <input type="file" name="foto_{{ i }}" class="form-control">
+    </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    <a href="{% url 'dashboard_dueno' %}" class="btn btn-secondary ml-2">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

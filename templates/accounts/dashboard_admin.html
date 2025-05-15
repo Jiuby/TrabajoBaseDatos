@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary">Mis Propiedades</h2>
+    <a href="{% url 'crear_propiedad' %}" class="btn btn-success shadow">
+      <i class="fas fa-plus-circle"></i> Nueva Propiedad
+    </a>
+  </div>
+
+  {% if propiedades %}
+    <div class="table-responsive shadow rounded">
+      <table class="table table-hover table-borderless align-middle mb-0">
+        <thead class="bg-primary text-white">
+          <tr>
+            <th>Imagen</th>
+            <th>Título</th>
+            <th>Precio</th>
+            <th>Ciudad</th>
+            <th>Departamento</th>
+            <th>Publicado</th>
+            <th>Fecha</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white">
+          {% for propiedad in propiedades %}
+          <tr class="border-bottom">
+            <td style="width: 110px;">
+              <img src="{{ propiedad.foto_principal.url }}" alt="Foto" class="img-fluid rounded shadow-sm" style="width: 100px; height: auto;">
+            </td>
+            <td>{{ propiedad.titulo }}</td>
+            <td class="text-success font-weight-bold">${{ propiedad.precio|intcomma }}</td>
+            <td>{{ propiedad.ciudad }}</td>
+            <td>{{ propiedad.get_departamento_display }}</td>
+            <td>
+              {% if propiedad.esta_publicado %}
+                <span class="badge badge-success">Sí</span>
+              {% else %}
+                <span class="badge badge-secondary">No</span>
+              {% endif %}
+            </td>
+            <td>{{ propiedad.lista_dato|date:"d/m/Y H:i" }}</td>
+            <td class="text-center">
+              <div class="d-grid gap-1">
+                <a href="{% url 'listing' propiedad.id %}" class="btn btn-outline-info btn-sm" target="_blank">
+                  <i class="fas fa-eye"></i> Ver
+                </a>
+                <a href="{% url 'editar_propiedad' propiedad.id %}" class="btn btn-outline-primary btn-sm">
+                  <i class="fas fa-edit"></i> Editar
+                </a>
+                <a href="{% url 'eliminar_propiedad' propiedad.id %}" class="btn btn-outline-danger btn-sm">
+                  <i class="fas fa-trash"></i> Eliminar
+                </a>
+                {% if propiedad.esta_publicado %}
+                  <a href="{% url 'publicar_propiedad' propiedad.id %}" class="btn btn-outline-warning btn-sm">
+                    <i class="fas fa-eye-slash"></i> Ocultar
+                  </a>
+                {% else %}
+                  <a href="{% url 'publicar_propiedad' propiedad.id %}" class="btn btn-outline-success btn-sm">
+                    <i class="fas fa-bullhorn"></i> Publicar
+                  </a>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info mt-4" role="alert">
+      Aún no has publicado ninguna propiedad. ¡Usa el botón de arriba para crear una!
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
